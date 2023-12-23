@@ -16,6 +16,7 @@ from .heatmap_decoder import PixelShuffleDecoder
 
 from .registry import MODELS
 
+# mark!
 @MODELS.register('HAWP')
 class HAWP(HAWPBase):
     def __init__(self, cfg, *, gray_scale=False):
