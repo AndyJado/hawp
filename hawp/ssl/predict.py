@@ -93,7 +93,8 @@ def main():
         with torch.no_grad():
             outputs, _ = model(image_,[meta])
 
-        fig_file = None if args.saveto is None or args.ext in ['txt','json']else osp.join(args.saveto,pname.with_suffix('.'+args.ext).name)
+        # fig_file = None if args.saveto is None or args.ext in ['txt','json']else osp.join(args.saveto,pname.with_suffix('.'+args.ext).name)
+        fig_file = osp.join(args.saveto,pname.with_suffix('.png').name)
 
         with show.image_canvas(fname, fig_file=fig_file) as ax:
             painter.draw_wireframe(ax,outputs)
