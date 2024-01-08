@@ -88,22 +88,12 @@ class HAWPainter:
         nodes = wireframe['juncs_pred']
         lines = indices[wireframe['lines_score']>self.confidence_threshold]
 
-        llll = wireframe['lines_pred'][wireframe['lines_score']>self.confidence_threshold]
-
-        print(lines,llll)
-
-        print(len(lines),len(llll))
-
         if isinstance(nodes, torch.Tensor):
             nodes = nodes.cpu().numpy()
         if isinstance(lines, torch.Tensor):
             lines = lines.cpu().numpy()
 
-        # print(len(nodes),nodes)
-        # print(len(lines),lines)
-
-        # y/x
-        new_lines = []
+        delines = []
         for i in range(0, len(nodes)):
             buf = []
             ls = []
@@ -127,8 +117,8 @@ class HAWPainter:
                     (xx2,yy2) = nodes[nn2]
                     cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
                     print(cta)
-                    if cta < kbar and ll < lenth:
-                        new_lines.append([n1,n2])
+                    if cta < kbar and lenth > ll:
+                        delines.append([n1,n2])
                 idx += 1
 
         for i in range(0, len(nodes)):
@@ -154,13 +144,13 @@ class HAWPainter:
                     (xx2,yy2) = nodes[nn2]
                     cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
                     print(cta)
-                    if cta < kbar and ll < lenth:
-                        new_lines.append([n1,n2])
+                    if cta < kbar and lenth > ll:
+                        delines.append([n1,n2])
                 idx += 1
 
         lines = lines.tolist();
 
-        for bl in new_lines:
+        for bl in delines:
             if bl in lines:
                 lines.remove(bl)
 
