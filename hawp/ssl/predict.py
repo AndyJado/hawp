@@ -97,7 +97,8 @@ def main():
         fig_file = osp.join(args.saveto,pname.with_suffix('.png').name)
 
         with show.image_canvas(fname, fig_file=fig_file) as ax:
-            painter.draw_wireframe(ax,outputs)
+            segs = painter.trianglerm(outputs)
+            painter.draw_wireframe(ax,segs)
 
         # if args.saveto and args.
         indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])

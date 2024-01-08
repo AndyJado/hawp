@@ -8,3 +8,7 @@ data/*
 **/*.so
 data-ssl/**/*
 exp-ssl/**/*
+checkpoints
+duh.jpg
+duh.json
+duh.png
