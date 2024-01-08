@@ -100,7 +100,7 @@ def main():
         indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
 
         with show.image_canvas(fname, fig_file=fig_file) as ax:
-            segs = painter.trianglerm(outputs,indices,0.5)
+            segs = painter.trianglerm(outputs,indices,50)
             painter.draw_segs(ax,segs)
 
         

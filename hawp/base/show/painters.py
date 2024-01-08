@@ -16,6 +16,31 @@ except ImportError:
 
 LOG = logging.getLogger(__name__)
 
+import math
+
+def dot_product(v1, v2):
+    return sum(x * y for x, y in zip(v1, v2))
+
+def magnitude(v):
+    return math.sqrt(sum(x**2 for x in v))
+
+def angle_between_vectors(v1, v2):
+    dot_prod = dot_product(v1, v2)
+    mag_v1 = magnitude(v1)
+    mag_v2 = magnitude(v2)
+
+    # 避免浮点数精度问题，确保余弦值在[-1, 1]范围内
+    cos_theta = min(1.0, max(-1.0, dot_prod / (mag_v1 * mag_v2)))
+
+    # 计算夹角（弧度）
+    angle_rad = math.acos(cos_theta)
+
+    # 转换为角度
+    angle_deg = math.degrees(angle_rad)
+    
+    return angle_deg
+
+
 
 class HAWPainter:
     line_width = None
@@ -83,22 +108,53 @@ class HAWPainter:
             buf = []
             ls = []
             for line in lines:
-                if line[0] == i or line[1] == i:
+                if line[0] == i:
                     buf.append(line)
 
             for l in buf:
                 n1 = nodes[l[0]]
                 n2 = nodes[l[1]]
-                k = (n2[1] - n1[1]) / (n2[0] - n1[0])
                 lenth = (n2[1] - n1[1])**2 + (n2[0] - n1[0])**2
                 lenth = math.sqrt(lenth)
-                ls.append((l[0],l[1],k,lenth))
+                ls.append((l[0],l[1],lenth))
 
             idx = 0
-            for (n1,n2,k,lenth) in ls:
-                for (_,_,kk,ll) in ls:
-                    diffk = abs(k - kk)
-                    if diffk < kbar and diffk > kbar/100.0 and ll > lenth:
+            for (n1,n2,lenth) in ls:
+                for (nn1,nn2,ll) in ls:
+                    (x1,y1) = nodes[n1]
+                    (x2,y2) = nodes[n2]
+                    (xx1,yy1) = nodes[nn1]
+                    (xx2,yy2) = nodes[nn2]
+                    cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
+                    print(cta)
+                    if cta < kbar and ll < lenth:
+                        new_lines.append([n1,n2])
+                idx += 1
+
+        for i in range(0, len(nodes)):
+            buf = []
+            ls = []
+            for line in lines:
+                if line[1] == i:
+                    buf.append(line)
+
+            for l in buf:
+                n1 = nodes[l[0]]
+                n2 = nodes[l[1]]
+                lenth = (n2[1] - n1[1])**2 + (n2[0] - n1[0])**2
+                lenth = math.sqrt(lenth)
+                ls.append((l[0],l[1],lenth))
+
+            idx = 0
+            for (n1,n2,lenth) in ls:
+                for (nn1,nn2,ll) in ls:
+                    (x1,y1) = nodes[n1]
+                    (x2,y2) = nodes[n2]
+                    (xx1,yy1) = nodes[nn1]
+                    (xx2,yy2) = nodes[nn2]
+                    cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
+                    print(cta)
+                    if cta < kbar and ll < lenth:
                         new_lines.append([n1,n2])
                 idx += 1
 
