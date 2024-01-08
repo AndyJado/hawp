@@ -34,7 +34,7 @@ class HAWPainter:
 
 
 
-    def draw_wireframe(self, ax, line_segments, *,
+    def draw_segs(self, ax, line_segments, *,
             edge_color = None, vertex_color = None):
         if line_segments is None:
             return
@@ -45,7 +45,8 @@ class HAWPainter:
             vertex_color = 'c'
         
         # [x1,y1,x2,y2]
-        ax.plot([line_segments[:,0],line_segments[:,2]],[line_segments[:,1],line_segments[:,3]],'-',color=edge_color)
+        for (x1,y1,x2,y2) in line_segments:
+            ax.plot([x1,x2],[y1,y2],'-',color=edge_color)
         ax.plot(line_segments[:,0],line_segments[:,1],'.',color=vertex_color)
         ax.plot(line_segments[:,2],line_segments[:,3],'.',
         color=vertex_color)
@@ -57,14 +58,14 @@ class HAWPainter:
             ax.text(x,y,str(idx),color='red')
             # print(idx)
 
-    def trianglerm(self, wireframe):
+    def trianglerm(self, wireframe,indices,kbar):
 
         nodes = wireframe['juncs_pred']
-        lines = wireframe['juncs_score'][wireframe['lines_score']>self.confidence_threshold]
+        lines = indices[wireframe['lines_score']>self.confidence_threshold]
 
         llll = wireframe['lines_pred'][wireframe['lines_score']>self.confidence_threshold]
 
-        print(lines[0],llll[0])
+        print(lines,llll)
 
         print(len(lines),len(llll))
 
@@ -82,7 +83,7 @@ class HAWPainter:
             buf = []
             ls = []
             for line in lines:
-                if line[0] == i:
+                if line[0] == i or line[1] == i:
                     buf.append(line)
 
             for l in buf:
@@ -97,7 +98,7 @@ class HAWPainter:
             for (n1,n2,k,lenth) in ls:
                 for (_,_,kk,ll) in ls:
                     diffk = abs(k - kk)
-                    if diffk < 0.01 and ll > lenth:
+                    if diffk < kbar and diffk > kbar/100.0 and ll > lenth:
                         new_lines.append([n1,n2])
                 idx += 1
 
