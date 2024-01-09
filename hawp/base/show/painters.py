@@ -116,7 +116,7 @@ class HAWPainter:
                     (xx1,yy1) = nodes[nn1]
                     (xx2,yy2) = nodes[nn2]
                     cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
-                    print(cta)
+                    # print(cta)
                     if cta < kbar and lenth > ll:
                         delines.append([n1,n2])
                 idx += 1
@@ -143,7 +143,7 @@ class HAWPainter:
                     (xx1,yy1) = nodes[nn1]
                     (xx2,yy2) = nodes[nn2]
                     cta = angle_between_vectors([x2-x1,y2-y1],[xx2-xx1,yy2-yy1])
-                    print(cta)
+                    # print(cta)
                     if cta < kbar and lenth > ll:
                         delines.append([n1,n2])
                 idx += 1
@@ -160,5 +160,5 @@ class HAWPainter:
             segs.append(seg)
         #[x1,y1,x2,y2]
         segs = np.array(segs)
-        print(segs)
         return segs
+        # print(segs)
