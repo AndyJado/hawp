@@ -38,6 +38,7 @@ def parse_args():
     aparser.add_argument('--ext', default='pdf', type=str, choices=['pdf','png','json','txt'])
     aparser.add_argument('--device', default='cuda', type=str, choices=['cuda','cpu','mps'])
     aparser.add_argument('--disable-show', default=False, action='store_true')
+    aparser.add_argument('--cta', default=20,type=float)
 
     for k in MODELS.keys():
         MODELS[k].cli(aparser)
@@ -57,6 +58,7 @@ def main():
     model = MODELS[args.metarch](model_config, gray_scale=True)
     model = model.eval().to(args.device)
     weight_path = args.ckpt
+    cta = args.cta
     state_dict = torch.load(weight_path,map_location='cpu')
 
     model.load_state_dict(state_dict)
@@ -100,7 +102,7 @@ def main():
         indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
 
         with show.image_canvas(fname, fig_file=fig_file) as ax:
-            segs = painter.trianglerm(outputs,indices,50)
+            segs = painter.trianglerm(outputs,indices,cta)
             painter.draw_segs(ax,segs)
 
         
