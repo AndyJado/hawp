@@ -72,10 +72,9 @@ class HAWPainter:
         # [x1,y1,x2,y2]
         for (x1,y1,x2,y2) in line_segments:
             ax.plot([x1,x2],[y1,y2],'-',color=edge_color)
-        ax.plot(line_segments[:,0],line_segments[:,1],'.',color=vertex_color)
-        ax.plot(line_segments[:,2],line_segments[:,3],'.',
-        color=vertex_color)
-        idx = 1
+        ax.plot(line_segments[:,0],line_segments[:,1],'o',color=vertex_color)
+        ax.plot(line_segments[:,2],line_segments[:,3],'o',color=vertex_color)
+        idx = 0
         for line in line_segments:
             idx += 1
             x = (line[0] + line[2]) / 2
