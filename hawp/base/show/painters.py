@@ -91,6 +91,8 @@ class HAWPainter:
             nodes = nodes.cpu().numpy()
         if isinstance(lines, torch.Tensor):
             lines = lines.cpu().numpy()
+        if isinstance(indices, torch.Tensor):
+            indices = indices.cpu().numpy()
 
         delines = []
         for i in range(0, len(nodes)):
@@ -159,5 +161,6 @@ class HAWPainter:
             segs.append(seg)
         #[x1,y1,x2,y2]
         segs = np.array(segs)
-        return segs
+        indices = torch.tensor(np.array(lines))
         # print(segs)
+        return (segs,indices)
