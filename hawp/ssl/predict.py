@@ -100,9 +100,11 @@ def main():
 
         # if args.saveto and args.
         indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
+        print('origin indices:',indices,'\n')
 
         with show.image_canvas(fname, fig_file=fig_file) as ax:
             (segs,new_idcs) = painter.trianglerm(outputs,indices,cta)
+            print('new',new_idcs,len(new_idcs),'\n')
             painter.draw_segs(ax,segs)
 
         
