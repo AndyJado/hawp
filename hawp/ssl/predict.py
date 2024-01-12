@@ -39,6 +39,7 @@ def parse_args():
     aparser.add_argument('--device', default='cuda', type=str, choices=['cuda','cpu','mps'])
     aparser.add_argument('--disable-show', default=False, action='store_true')
     aparser.add_argument('--cta', default=20,type=float)
+    aparser.add_argument('--idx', default=False,type=bool)
 
     for k in MODELS.keys():
         MODELS[k].cli(aparser)
@@ -59,6 +60,7 @@ def main():
     model = model.eval().to(args.device)
     weight_path = args.ckpt
     cta = args.cta
+    draw_line_idx = args.idx
     state_dict = torch.load(weight_path,map_location='cpu')
 
     model.load_state_dict(state_dict)
@@ -105,7 +107,7 @@ def main():
         with show.image_canvas(fname, fig_file=fig_file) as ax:
             (segs,new_idcs) = painter.trianglerm(outputs,indices,cta)
             # print('new',new_idcs,len(new_idcs),'\n')
-            painter.draw_segs(ax,segs)
+            painter.draw_segs(ax,segs,draw_line_idx)
 
         
         wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])

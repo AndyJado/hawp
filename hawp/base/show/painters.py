@@ -56,7 +56,7 @@ class HAWPainter:
             self.marker_size = max(1, int(self.line_width * 0.5))
     
 
-    def draw_segs(self, ax, line_segments, *,
+    def draw_segs(self, ax, line_segments,draw_line_idx, *,
             edge_color = None, vertex_color = None):
         if line_segments is None:
             return
@@ -71,13 +71,14 @@ class HAWPainter:
             ax.plot([x1,x2],[y1,y2],'-',color=edge_color)
         ax.plot(line_segments[:,0],line_segments[:,1],'.',color=vertex_color)
         ax.plot(line_segments[:,2],line_segments[:,3],'.',color=vertex_color)
-        idx = 0
-        for line in line_segments:
-            idx += 1
-            x = (line[0] + line[2]) / 2
-            y = (line[1] + line[3]) / 2
-            ax.text(x,y,str(idx),color='brown',horizontalalignment='center',verticalalignment='center',fontsize=18)
-            # print(idx)
+        if draw_line_idx:
+            idx = 0
+            for line in line_segments:
+                idx += 1
+                x = (line[0] + line[2]) / 2
+                y = (line[1] + line[3]) / 2
+                ax.text(x,y,str(idx),color='brown')
+                # print(idx)
 
     def trianglerm(self, wireframe,indices,kbar):
 
