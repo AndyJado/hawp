@@ -1,1 +1,1 @@
-python -m hawp.ssl.predict --device mps --ckpt checkpoints/hawpv3-imagenet-03a84.pth --cta 30 --threshold 0.05 --img ./test/duh.png --saveto ./test/ --ext json --disable-show
+python -m hawp.ssl.predict --device mps --ckpt checkpoints/hawpv3-imagenet-03a84.pth --width $1 --height $1 --cta 10 --threshold 0.08 --img ./test/duh.jpg --saveto ./test/ --ext json --disable-show && open ./test/duh.svg
