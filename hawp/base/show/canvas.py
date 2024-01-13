@@ -130,7 +130,7 @@ class Canvas:
         ax.set_xlim(-0.5, image.shape[1] - 0.5)  # imshow uses center-pixel-coordinates
         ax.set_ylim(image.shape[0] - 0.5, -0.5)
         fig.add_axes(ax)
-        # ax.imshow(image)
+        ax.imshow(image)
         if cls.white_overlay:
             white_screen(ax, cls.white_overlay)
         yield ax
