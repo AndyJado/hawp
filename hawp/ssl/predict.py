@@ -15,7 +15,6 @@ from hawp.ssl.config import Config, load_config
 from hawp.ssl.datasets import dataset_util
 from hawp.ssl.models import MODELS
 
-
 from torch.utils.data import DataLoader
 import torch.utils.data.dataloader as torch_loader
 
@@ -83,11 +82,11 @@ def main():
         
         ori_shape = image.shape[:2]
         image_cp = copy.deepcopy(image)
+        # fix sized input!
         image_ = cv2.resize(image_cp,(width,height))
         image_ = torch.from_numpy(image_).float()/255.0
         image_ = image_[None,None].to(args.device)
-        
-        
+                
         meta = {
             'width': ori_shape[1],
             'height':ori_shape[0],
