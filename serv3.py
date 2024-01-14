@@ -47,8 +47,17 @@ def image_a(fname,width,height):
         'filename': ''
     }
     return image_,meta
-    
-    
+
+def predict(model,painter):
+    image,meta = image_a('duh.jpg',512,512)
+    outputs,_ = model(image,[meta])
+    fig_file = osp.join('./test.png')
+    indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
+    with show.image_canvas(fname, fig_file=fig_file) as ax:
+        (segs,new_idcs) = painter.trianglerm(outputs,indices,10)
+        # print('new',new_idcs,len(new_idcs),'\n')
+        painter.draw_segs(ax,segs,False)
+    # wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
 
 def main():
     model = model_load()
