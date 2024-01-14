@@ -32,7 +32,6 @@ def model_load():
     return model
 
 def image_a(fname,width,height):
-    pname = Path(fname)
     image = cv2.imread(fname,0)
     
     ori_shape = image.shape[:2]
@@ -61,8 +60,7 @@ def main():
     os.chdir(script_directory)
     args = parse_args()
     model = model_load()
-    painter = show.painters.HAWPainter()
-    order_path = str(args.np) + '.txt'
+    order_path = 'orders/' + str(args.np) + '.txt'
 
     with torch.no_grad():
         while True:
@@ -76,12 +74,16 @@ def main():
             data = json.loads(user_input.strip())
             fname = data['file']
             outy = data['outy']
+            cta = data['cta']
+            bar = data['bar']
+            show.painters.HAWPainter.confidence_threshold = bar
+            painter = show.painters.HAWPainter()
             image,meta = image_a(fname,512,512)
             outputs,_ = model(image,[meta])
             fig_file = osp.join(outy)
             indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
             with show.image_canvas(fname, fig_file=fig_file) as ax:
-                (segs,new_idcs) = painter.trianglerm(outputs,indices,10)
+                (segs,new_idcs) = painter.trianglerm(outputs,indices,cta)
                 # print('new',new_idcs,len(new_idcs),'\n')
                 painter.draw_segs(ax,segs,False)
             wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
