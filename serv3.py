@@ -48,36 +48,45 @@ def image_a(fname,width,height):
     }
     return image_,meta
 
-def predict(model,painter):
-    image,meta = image_a('duh.jpg',512,512)
-    outputs,_ = model(image,[meta])
-    fig_file = osp.join('./test.png')
-    indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
-    with show.image_canvas(fname, fig_file=fig_file) as ax:
-        (segs,new_idcs) = painter.trianglerm(outputs,indices,10)
-        # print('new',new_idcs,len(new_idcs),'\n')
-        painter.draw_segs(ax,segs,False)
-    # wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--np', default=1,type=int)
+    args = parser.parse_args()
+    return args
 
 def main():
+    script_path = os.path.abspath(__file__)
+    # Change the current working directory to the directory containing the script
+    script_directory = os.path.dirname(script_path)
+    os.chdir(script_directory)
+    args = parse_args()
     model = model_load()
     painter = show.painters.HAWPainter()
+    order_path = str(args.np) + '.txt'
 
     with torch.no_grad():
         while True:
-            user_input = input("file path:")
+            if not os.path.exists(order_path):
+                continue
+            with open(order_path,'r') as order:
+                user_input = order.readline()
+            if not user_input:
+                continue
             print(user_input)
-            data = json.loads(user_input)
+            data = json.loads(user_input.strip())
             fname = data['file']
+            outy = data['outy']
             image,meta = image_a(fname,512,512)
             outputs,_ = model(image,[meta])
-            fig_file = osp.join('./test.png')
+            fig_file = osp.join(outy)
             indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
             with show.image_canvas(fname, fig_file=fig_file) as ax:
                 (segs,new_idcs) = painter.trianglerm(outputs,indices,10)
                 # print('new',new_idcs,len(new_idcs),'\n')
                 painter.draw_segs(ax,segs,False)
             wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
+            if os.path.exists(order_path):
+                os.remove(order_path)
 
 
 if __name__ == '__main__':
