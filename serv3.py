@@ -80,13 +80,18 @@ def main():
             painter = show.painters.HAWPainter()
             image,meta = image_a(fname,512,512)
             outputs,_ = model(image,[meta])
+            out_fig = outy + '.png'
+            out_json = outy + '.json'
             fig_file = osp.join(outy)
+            json_file = osp.join(out_json)
             indices = WireframeGraph.xyxy2indices(outputs['juncs_pred'],outputs['lines_pred'])
             with show.image_canvas(fname, fig_file=fig_file) as ax:
                 (segs,new_idcs) = painter.trianglerm(outputs,indices,cta)
                 # print('new',new_idcs,len(new_idcs),'\n')
                 painter.draw_segs(ax,segs,False)
             wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
+            with open(json_file,'w') as f:
+                json.dump(wireframe.jsonize(),f)
             if os.path.exists(order_path):
                 os.remove(order_path)
 
