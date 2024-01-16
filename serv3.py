@@ -70,7 +70,7 @@ def main():
                 user_input = order.readline()
             if not user_input:
                 continue
-            print(user_input)
+            # print(user_input)
             data = json.loads(user_input.strip())
             fname = data['file']
             outy = data['outy']
@@ -89,6 +89,11 @@ def main():
                 (segs,new_idcs) = painter.trianglerm(outputs,indices,cta)
                 # print('new',new_idcs,len(new_idcs),'\n')
                 painter.draw_segs(ax,segs,False)
+
+            # mirror for ansa process
+            outputs['juncs_pred'][:, 1] = outputs['height'] - outputs['juncs_pred'][:, 1]
+            outputs['lines_pred'][:, [1, 3]] = outputs['height'] - outputs['lines_pred'][:, [1, 3]]
+
             wireframe = WireframeGraph(outputs['juncs_pred'], outputs['juncs_score'], new_idcs, outputs['lines_score'], outputs['width'], outputs['height'])
             with open(json_file,'w') as f:
                 json.dump(wireframe.jsonize(),f)
