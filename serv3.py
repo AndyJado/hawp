@@ -1,25 +1,19 @@
-import torch
-import random 
-import numpy as np
+import argparse
+import copy
+import json
 import os
 import os.path as osp
-from tqdm import tqdm
 
-from hawp.base import to_device, setup_logger, MetricLogger, save_config, show, WireframeGraph
+import cv2
+import torch
 
-
-from hawp.fsl.solver import make_lr_scheduler, make_optimizer
+from hawp.base import (
+    WireframeGraph,
+    show,
+)
 from hawp.fsl.config import cfg as model_config
-
-from hawp.ssl.config import Config, load_config
-from hawp.ssl.datasets import dataset_util
 from hawp.ssl.models import MODELS
 
-from torch.utils.data import DataLoader
-import torch.utils.data.dataloader as torch_loader
-
-from pathlib import Path
-import argparse, yaml, logging, time, datetime, cv2, copy, sys, json
 
 def model_load():
     model_config.merge_from_file(os.path.join(
