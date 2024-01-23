@@ -1,0 +1,3 @@
+{"file":"/Users/andyjado/Zf/wacha/hawp/duh.jpg","outy":"/Users/andyjado/Zf/wacha/hawp/duh.jpg","cta":"50","bar":"0.5"}
+
+curl -X POST -H "Content-Type: application/json" -d '{"file":"/Users/andyjado/Zf/wacha/hawp/duh.jpg","outy":"/Users/andyjado/Zf/wacha/hawp/duh.jpg","cta":"50","bar":"0.5"}' http: //127.0.0.1:5000
